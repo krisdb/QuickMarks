@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">QuickMarks</string>
+    <string name="app_label">QuickMarks</string>
+
+    <string name="content_uri_default">content://browser/bookmarks</string>
+    <string name="content_uri_firefox">content://org.mozilla.firefox.db.browser/bookmarks</string>
+    <string name="content_uri_chrome">content://com.android.chrome.browser/bookmarks</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
