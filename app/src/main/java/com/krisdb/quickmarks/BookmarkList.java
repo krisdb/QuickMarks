@@ -1,6 +1,7 @@
 package com.krisdb.quickmarks;
 
 import android.app.ListActivity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -18,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,25 +33,37 @@ public class BookmarkList extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final PackageManager pm = getPackageManager();
+
+        final ResolveInfo mInfo = pm.resolveActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com")), 0);
+
+        final String packageName = String.valueOf(pm.getApplicationLabel(mInfo.activityInfo.applicationInfo)).toLowerCase();
+        //Toast.makeText(this, packageName, Toast.LENGTH_LONG).show();
+
+        if (packageName.contains("firefox"))
+        {
+            Intent intent = new Intent(Intent.ACTION_MAIN, null);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.setComponent(new ComponentName("org.mozilla.firefox", "org.mozilla.firefox.App"));
+            intent.setAction("org.mozilla.gecko.BOOKMARK");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            //startActivityForResult(intent, 1);
+            return;
+        }
+
         setContentView(R.layout.bookmark_list);
 
         adapter = new CustomAdapter();
         bookmarks = new ArrayList<>();
 
-        final PackageManager pm = getPackageManager();
-
-        final ResolveInfo mInfo = pm.resolveActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com")), 0);
-
         String browserURi;
 
-        final String packageName = String.valueOf(pm.getApplicationLabel(mInfo.activityInfo.applicationInfo)).toLowerCase();
 
-        if (packageName.contains("firefox"))
-            browserURi = getResources().getString(R.string.content_uri_firefox);
-        else if(packageName.contains("chrome"))
+        if(packageName.contains("chrome"))
             browserURi = getResources().getString(R.string.content_uri_chrome);
         else
-            browserURi =  getResources().getString(R.string.content_uri_default);
+            browserURi = getResources().getString(R.string.content_uri_default);
 
         String[] projection = new String[] {Browser.BookmarkColumns.FAVICON, Browser.BookmarkColumns.TITLE, Browser.BookmarkColumns.URL};
         Uri uri = Uri.parse(browserURi);
@@ -87,7 +101,12 @@ public class BookmarkList extends ListActivity {
 
         final BookmarkItem bookmark = bookmarks.get(position);
 
-        startActivityForResult(new Intent(Intent.ACTION_VIEW, Uri.parse(bookmark.getUrl())), 1);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(bookmark.getUrl()));
+        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+        startActivity(intent);
+        //startActivityForResult(intent, 1);
     }
 
     /* ADAPTER */
