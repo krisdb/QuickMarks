@@ -1,4 +1,4 @@
-package com.krisdb.quickmarks;
+package com.qualcode.quickmarks;
 
 public class BookmarkItem implements Comparable<BookmarkItem> {
 

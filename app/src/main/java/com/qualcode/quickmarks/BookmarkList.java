@@ -1,4 +1,4 @@
-package com.krisdb.quickmarks;
+package com.qualcode.quickmarks;
 
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -19,7 +19,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
